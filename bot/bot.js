@@ -7,6 +7,10 @@ const handleDeleteAssignment = require("./handlers/deleteAssignment");
 const handleDeleteAllAssignments = require("./handlers/deleteAllAssignment");
 const startReminderScheduler = require("./handlers/reminderScheduler");
 
+if (!process.env.BOT_TOKEN) {
+  throw new Error("BOT_TOKEN is missing");
+}
+
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use(session());
 
