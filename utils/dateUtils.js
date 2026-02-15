@@ -15,4 +15,16 @@ function formatTime(ms) {
   return `${hours}h ${minutes}m`;
 }
 
-module.exports = { parseDate, formatDate, formatTime };
+function formatDuration(ms) {
+  const totalMinutes = Math.floor(ms / (60 * 1000));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours > 0 && minutes > 0) {
+    return `${hours} hour(s) ${minutes} minute(s)`;
+  }
+  if (hours > 0) return `${hours} hour(s)`;
+  return `${minutes} minute(s)`;
+}
+
+module.exports = { parseDate, formatDate, formatTime, formatDuration };

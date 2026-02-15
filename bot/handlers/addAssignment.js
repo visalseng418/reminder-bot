@@ -1,7 +1,6 @@
 //const { getSession, clearSession } = require("../session");
 const db = require("../../configs/db");
 const { parseDate, formatDate } = require("../../utils/dateUtils");
-
 function handleAddAssignment(bot) {
   // Start add flow
   bot.command("add", (ctx) => {
@@ -66,7 +65,6 @@ function handleAddAssignment(bot) {
 
       const [, month, day, hour, minute] = match;
       const year = new Date().getFullYear();
-
       const dueTime = new Date(
         year,
         Number(month) - 1,
@@ -74,10 +72,16 @@ function handleAddAssignment(bot) {
         Number(hour),
         Number(minute),
       );
+      const now = Date.now();
 
       // Extra safety check (invalid date like 02-30)
       if (isNaN(dueTime.getTime())) {
-        return ctx.reply("❌ Invalid date value. Please try again.");
+        return ctx.reply("⚠️ Invalid date value. Please try again.");
+      }
+
+      // 🚫 Prevent past or current time
+      if (dueTime.getTime() <= now) {
+        return ctx.reply("⚠️ Due time must be in the future.\n");
       }
 
       db.run(
@@ -91,8 +95,9 @@ function handleAddAssignment(bot) {
           }
 
           ctx.reply(
-            `✅"${ctx.session.title}" saved!\n` +
-              `Due at: ${formatDate(dueTime)}`,
+            `✅ "${ctx.session.title}" saved!\n` +
+              `📅 Due at: ${formatDate(dueTime)}\n` +
+              `🔔 You will be reminded later!`,
           );
 
           // ✅ Clear session so other commands work

@@ -8,13 +8,25 @@ function handleDeleteAssignment(bot) {
     const id = parseInt(text);
     if (isNaN(id)) return ctx.reply("❌ Invalid ID");
 
-    db.run(
-      `DELETE FROM assignments WHERE id = ? AND chat_id = ?`,
+    // First, get the assignment title before deleting
+    db.get(
+      `SELECT title FROM assignments WHERE id = ? AND chat_id = ?`,
       [id, ctx.chat.id],
-      function (err) {
-        if (err) return ctx.reply("❌ Error deleting assignment");
-        if (this.changes === 0) return ctx.reply("❌ Assignment not found");
-        ctx.reply(`✅ Assignment ID ${id} deleted`);
+      (err, row) => {
+        if (err) return ctx.reply("❌ Error fetching assignment");
+        if (!row) return ctx.reply("❌ Assignment not found");
+
+        const title = row.title;
+
+        // Now delete the assignment
+        db.run(
+          `DELETE FROM assignments WHERE id = ? AND chat_id = ?`,
+          [id, ctx.chat.id],
+          function (err) {
+            if (err) return ctx.reply("❌ Error deleting assignment");
+            ctx.reply(`✅ Assignment ID ${id}, "${title}" deleted`);
+          },
+        );
       },
     );
   });

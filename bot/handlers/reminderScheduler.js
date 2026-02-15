@@ -6,24 +6,26 @@ function startReminderScheduler(bot) {
     const now = Date.now();
     const oneDay = 24 * 60 * 60 * 1000;
     const fiveHours = 5 * 60 * 60 * 1000;
+    const oneMinute = 60 * 1000;
 
     // 🔔 1-DAY REMINDER
     db.all(
       `SELECT * FROM assignments
-       WHERE due_time > ?
-       AND due_time - ? <= ?
-       AND reminded_1d = 0`,
-      [now, now, oneDay],
+   WHERE due_time > ?
+   AND due_time - ? <= ?
+   AND due_time - ? > ?
+   AND reminded_1d = 0`,
+      [now, now, oneDay, now, oneDay - oneMinute],
       (err, rows) => {
         if (err || !rows?.length) return;
 
         rows.forEach((a) => {
-          const timeLeft = a.due_time - now; // milliseconds
+          const timeLeft = a.due_time - now;
           const formattedTimeLeft = formatTime(timeLeft);
 
           bot.telegram.sendMessage(
             a.chat_id,
-            `📅Reminder!!!!!!!\n"${a.title}" is due in ${formattedTimeLeft}`,
+            `📅 Reminder!\n"${a.title}" is due in ${formattedTimeLeft}`,
           );
 
           db.run(`UPDATE assignments SET reminded_1d = 1 WHERE id = ?`, [a.id]);

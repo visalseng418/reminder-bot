@@ -4,6 +4,18 @@ function handleDeleteAllAssignments(bot) {
   bot.command("deleteall", (ctx) => {
     ctx.session = { confirmDeleteAll: true };
 
+    // First, check if there are any assignments to delete
+    db.get(
+      `SELECT COUNT(*) as count FROM assignments WHERE chat_id = ?`,
+      [ctx.chat.id],
+      (err, row) => {
+        if (err) return ctx.reply("❌ Error checking assignments");
+
+        if (row.count === 0) {
+          return ctx.reply("❌ No assignments found");
+        }
+      },
+    );
     ctx.reply(
       "⚠️ This will delete *ALL* your assignments.\n\n" +
         "Type `CONFIRM` to proceed or anything else to cancel.",
