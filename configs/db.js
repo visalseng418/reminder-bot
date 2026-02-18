@@ -34,4 +34,18 @@ CREATE TABLE IF NOT EXISTS assignments (
   },
 );
 
+// Initialize canvas_tokens table
+db.run(
+  `CREATE TABLE IF NOT EXISTS canvas_tokens (
+    chat_id INTEGER PRIMARY KEY,
+    canvas_token TEXT NOT NULL,
+    last_sync INTEGER DEFAULT 0
+  )`,
+  (err) => {
+    if (err) {
+      console.error("Error creating canvas_tokens table:", err);
+    }
+  },
+);
+
 module.exports = db;
