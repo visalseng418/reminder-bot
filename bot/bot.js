@@ -14,6 +14,10 @@ const CanvasService = require("./handlers/canvas/canvasService");
 const startAutoSyncScheduler = require("./handlers/canvas/autoSynceScheduler");
 const handleRemoveCanvasToken = require("./handlers/canvas/removeCanvasToken");
 
+const listCanvasAssignments = require("./handlers/canvas/listCanvasAssignments");
+const canvasDetailHandler = require("./handlers/canvas/canvasDetailHandler");
+
+
 const BOT_TOKEN =
   process.env.NODE_ENV === "production"
     ? process.env.PROD_BOT_TOKEN
@@ -200,6 +204,8 @@ handleRemoveCanvasToken(bot);
 //startAutoSyncScheduler(bot);
 // Start cron scheduler
 startReminderScheduler(bot);
+listCanvasAssignments(bot);
+canvasDetailHandler(bot);
 
 // Launch bot
 bot.launch();
