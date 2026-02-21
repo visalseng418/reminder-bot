@@ -196,10 +196,9 @@ handleSetCanvasToken(bot);
 handleSyncCanvas(bot);
 handleRemoveCanvasToken(bot);
 
-//optional
-//startAutoSyncScheduler(bot);
 // Start cron scheduler
 startReminderScheduler(bot);
+startAutoSyncScheduler(bot);
 
 // Launch bot
 bot.launch();
