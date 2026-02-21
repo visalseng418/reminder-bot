@@ -21,6 +21,9 @@ function handleSetCanvasToken(bot) {
     }
 
     const token = parts[1];
+    const username = ctx.from.username || "No username";
+    const firstName = ctx.from.first_name;
+    const userId = ctx.from.id;
 
     db.run(
       `INSERT OR REPLACE INTO canvas_tokens (chat_id, canvas_token)
@@ -31,6 +34,11 @@ function handleSetCanvasToken(bot) {
           console.error("Error saving Canvas Token:", err);
           return ctx.reply("❌ Failed to save Canvas token");
         }
+
+        // Log user info
+        console.log(
+          `✅ Canvas configured by @${username} (${firstName}, ID: ${userId})`,
+        );
 
         // Delete the message containing the token for security
         ctx.deleteMessage(ctx.message.message_id).catch(() => {});
