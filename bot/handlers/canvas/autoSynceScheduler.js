@@ -42,6 +42,7 @@ function startAutoSyncScheduler(bot) {
           for (const assignment of assignments) {
             const dueTime = assignment.dueDate.getTime();
             const title = `[${assignment.course}] ${assignment.title}`;
+            const canvas_id = assignment.id;
 
             // Check if assignment already exists
             const existing = await new Promise((resolve) => {
@@ -58,9 +59,9 @@ function startAutoSyncScheduler(bot) {
               // Insert new assignment
               await new Promise((resolve, reject) => {
                 db.run(
-                  `INSERT INTO assignments (chat_id, title, due_time)
-                   VALUES (?, ?, ?)`,
-                  [user.chat_id, title, dueTime],
+                  `INSERT INTO assignments (chat_id, title, due_time, canvas_id)
+                   VALUES (?, ?, ?, ?)`,
+                  [user.chat_id, title, dueTime, canvas_id],
                   (err) => (err ? reject(err) : resolve()),
                 );
               });

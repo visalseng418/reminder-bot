@@ -85,8 +85,8 @@ function handleAddAssignment(bot) {
       }
 
       db.run(
-        `INSERT INTO assignments (chat_id, title, due_time)
-         VALUES (?, ?, ?)`,
+        `INSERT INTO assignments (chat_id, title, due_time, canvas_id)
+         VALUES (?, ?, ?, 0)`,
         [ctx.chat.id, ctx.session.title, dueTime],
         (err) => {
           if (err) {

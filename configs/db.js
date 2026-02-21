@@ -31,6 +31,15 @@ CREATE TABLE IF NOT EXISTS assignments (
         }
       },
     );
+
+    db.run(
+      `ALTER TABLE assignments ADD COLUMN canvas_id INTEGER DEFAULT 0`,
+      (err) => {
+        if (err && !err.message.includes("duplicate column name")) {
+          console.error("Error adding canvas_id column", err);
+        }
+      },
+    );
   },
 );
 

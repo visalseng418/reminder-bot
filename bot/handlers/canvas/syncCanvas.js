@@ -27,13 +27,14 @@ function handleSyncCanvas(bot) {
           }
 
           //loggin data.
-          //console.log(assignments);
+          console.log(assignments);
           let imported = 0;
           let skipped = 0;
 
           for (const assignment of assignments) {
             const dueTime = assignment.dueDate.getTime();
             const title = `[${assignment.course}] ${assignment.title}`;
+            const canvas_id = assignment.id;
             console.log(`Title: ${title} and dueTime ${dueTime}`);
 
             // Check if assignment already exists
@@ -54,9 +55,9 @@ function handleSyncCanvas(bot) {
             // Insert new assignment
             await new Promise((resolve, reject) => {
               db.run(
-                `INSERT INTO assignments (chat_id, title, due_time)
-                 VALUES (?, ?, ?)`,
-                [ctx.chat.id, title, dueTime],
+                `INSERT INTO assignments (chat_id, title, due_time, canvas_id)
+                 VALUES (?, ?, ?, ?)`,
+                [ctx.chat.id, title, dueTime, canvas_id],
                 (err) => (err ? reject(err) : resolve()),
               );
             });
