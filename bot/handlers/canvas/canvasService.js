@@ -50,6 +50,39 @@ class CanvasService {
     }
   }
 
+  // services/canvasService.js
+  async getPlannerItems() {
+    try {
+      const response = await axios.get(`${this.baseURL}/planner/items`, {
+        headers: this.headers,
+        params: {
+          start_date: "2026-02-04T17:00:00.000Z", // Your specific start date
+          filter: "incomplete_items",
+          order: "asc",
+          per_page: 14
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching Planner Items:", error.message);
+      throw new Error("Failed to fetch planner items from Canvas");
+    }
+  }
+
+  // services/canvasService.js
+  async getAssignmentDetail(courseId, assignmentId) {
+    try {
+      const response = await axios.get(
+        `${this.baseURL}/courses/${courseId}/assignments/${assignmentId}`,
+        { headers: this.headers }
+      );
+      return response.data; // Contains 'description', 'points_possible', and 'html_url'
+    } catch (error) {
+      console.error(`Error fetching assignment ${assignmentId}:`, error.message);
+      throw error;
+    }
+  }
+
   // Fetch all assignments from all courses
   async getAllAssignments() {
     try {
